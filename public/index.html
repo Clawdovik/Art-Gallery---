@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Картинная Галерея</title>
+    <style>
+        body { font-family: Arial; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .artist { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .painting { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #007acc; }
+        img { max-width: 300px; height: auto; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🎨 Картинная Галерея</h1>
+    <div id="gallery"></div>
+
+    <script>
+        fetch('/artists')
+            .then(response => response.json())
+            .then(data => {
+                const gallery = document.getElementById('gallery');
+                data.artists.forEach(artist => {
+                    const artistDiv = document.createElement('div');
+                    artistDiv.className = 'artist';
+                    artistDiv.innerHTML = `
+                        <h2>${artist.name} (${artist.country})</h2>
+                        <p><em>${artist.biography}</em></p>
+                        <h3>Картины:</h3>
+                        ${artist.Paintings.map(painting => `
+                            <div class="painting">
+                                <h4>${painting.title} (${painting.year})</h4>
+                                <img src="${painting.imageUrl}" alt="${painting.title}">
+                                <p>${painting.description}</p>
+                                <p><strong>Стиль:</strong> ${painting.style}</p>
+                                <p><strong>Оценочная стоимость:</strong> $${painting.price.toLocaleString()}</p>
+                            </div>
+                        `).join('')}
+                    `;
+                    gallery.appendChild(artistDiv);
+                });
+            });
+    </script>
+</body>
+</html>
